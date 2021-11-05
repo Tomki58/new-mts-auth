@@ -1,8 +1,10 @@
 package httpserver
 
 import (
+	v1 "mts/auth/httpserver/api/v1"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"go.uber.org/zap"
 )
 
@@ -15,9 +17,18 @@ type Service struct {
 
 // New creates and returns new object of Service
 func New() (*Service, error) {
+	app, err := v1.New()
+	if err != nil {
+		return nil, err
+	}
+
+	router := chi.NewRouter()
+
+	app.ApplyEndpoints(router)
+
 	server := http.Server{
 		Addr:    ":9000",
-		Handler: nil,
+		Handler: router,
 	}
 
 	logger, err := zap.NewDevelopment()
