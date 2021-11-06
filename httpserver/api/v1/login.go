@@ -2,6 +2,7 @@ package v1
 
 import (
 	"mts/auth/cookies"
+	"mts/auth/httpserver/serializer"
 	"net/http"
 )
 
@@ -21,7 +22,14 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 
 		http.SetCookie(w, &cookies[0])
 		http.SetCookie(w, &cookies[1])
-		w.Write([]byte("Successfully logged in!"))
+
+		response, err := serializer.SerializeResponseJson("Successfully logged in!")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(response)
 		return
 	}
 	http.Error(w, "Invalid username or password!", http.StatusUnauthorized)
