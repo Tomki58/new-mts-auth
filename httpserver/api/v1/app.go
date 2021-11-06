@@ -2,7 +2,6 @@ package v1
 
 import (
 	"mts/auth/config"
-	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -27,11 +26,9 @@ func New() (*App, error) {
 
 // ApplyEndpoints sets routes for router.
 func (a *App) ApplyEndpoints(router *chi.Mux) {
+	router.Use(middleware.DefaultLogger)
 	router.Route("/api/v1", func(r chi.Router) {
-		r.Use(middleware.Logger, middleware.BasicAuth("User client realm", a.Config.Credentials))
-		// TODO: swap handler to login handler
-		r.Get("/login", func(rw http.ResponseWriter, r *http.Request) {
-			rw.Write([]byte("Welcome string!"))
-		})
+		// r.Use(middleware.Logger, middleware.BasicAuth("User client realm", a.Config.Credentials))
+		r.Get("/login", a.login)
 	})
 }
