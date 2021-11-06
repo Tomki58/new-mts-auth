@@ -14,7 +14,6 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if pass, ok := a.Config.Credentials[username]; ok && password == pass {
-		w.Write([]byte("Successfully logged in!"))
 		cookies, err := cookies.New(username)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -22,6 +21,7 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 
 		http.SetCookie(w, &cookies[0])
 		http.SetCookie(w, &cookies[1])
+		w.Write([]byte("Successfully logged in!"))
 		return
 	}
 	http.Error(w, "Invalid username or password!", http.StatusUnauthorized)

@@ -29,12 +29,12 @@ func New(value string) ([]http.Cookie, error) {
 	accessCookie := http.Cookie{
 		Name:   "Access",
 		Value:  tokenString,
-		MaxAge: int(1 * time.Minute),
+		MaxAge: int(1 * time.Minute / 1e9),
 	}
 	refreshCookie := http.Cookie{
 		Name:   "Refresh",
 		Value:  tokenString,
-		MaxAge: int(1 * time.Hour),
+		MaxAge: int(1 * time.Hour / 1e9),
 	}
 
 	cookies[0], cookies[1] = accessCookie, refreshCookie
